@@ -1,0 +1,591 @@
+
+Practica1.elf:     file format elf32-littlearm
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .data         000c0088  0c000000  0c000000  00008000  2**2
+                  CONTENTS, ALLOC, LOAD, DATA
+  1 .bss          000c0004  0c0c0088  0c0c0088  000c8088  2**2
+                  ALLOC
+  2 .text         0000057c  0c18008c  0c18008c  000c808c  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  3 .ARM.attributes 0000002c  00000000  00000000  000c8608  2**0
+                  CONTENTS, READONLY
+  4 .comment      0000003b  00000000  00000000  000c8634  2**0
+                  CONTENTS, READONLY
+  5 .debug_line   000004de  00000000  00000000  000c866f  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_info   000004bd  00000000  00000000  000c8b4d  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_abbrev 0000026d  00000000  00000000  000c900a  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_aranges 000000a0  00000000  00000000  000c9278  2**3
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_macinfo 0000af62  00000000  00000000  000c9318  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 10 .debug_pubnames 000000fc  00000000  00000000  000d427a  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 11 .debug_str    000001b9  00000000  00000000  000d4376  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 12 .debug_loc    00000134  00000000  00000000  000d452f  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 13 .debug_pubtypes 00000060  00000000  00000000  000d4663  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 14 .debug_frame  00000118  00000000  00000000  000d46c4  2**2
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+0c18008c <start>:
+ c18008c:	e59fd008 	ldr	sp, [pc, #8]	; c18009c <End+0x4>
+ c180090:	e3a0b000 	mov	fp, #0
+ c180094:	eb00000f 	bl	c1800d8 <main>
+
+0c180098 <End>:
+ c180098:	eafffffe 	b	c180098 <End>
+ c18009c:	0c7ff000 	.word	0x0c7ff000
+
+0c1800a0 <initRGB>:
+        	imagenRGB[i*ncols+j].B = (i+j)%256;
+        }
+}
+#else
+void initRGB(int nfilas, int ncols)
+{
+ c1800a0:	e1a0c00d 	mov	ip, sp
+ c1800a4:	e92dd800 	push	{fp, ip, lr, pc}
+ c1800a8:	e24cb004 	sub	fp, ip, #4
+ c1800ac:	e24dd008 	sub	sp, sp, #8
+ c1800b0:	e50b0010 	str	r0, [fp, #-16]
+ c1800b4:	e50b1014 	str	r1, [fp, #-20]	; 0xffffffec
+    imagenRGB = (pixelRGB*) imageLena512;
+ c1800b8:	e59f2010 	ldr	r2, [pc, #16]	; c1800d0 <initRGB+0x30>
+ c1800bc:	e59f3010 	ldr	r3, [pc, #16]	; c1800d4 <initRGB+0x34>
+ c1800c0:	e5832000 	str	r2, [r3]
+}
+ c1800c4:	e24bd00c 	sub	sp, fp, #12
+ c1800c8:	e89d6800 	ldm	sp, {fp, sp, lr}
+ c1800cc:	e12fff1e 	bx	lr
+ c1800d0:	0c000000 	.word	0x0c000000
+ c1800d4:	0c0c0088 	.word	0x0c0c0088
+
+0c1800d8 <main>:
+#endif
+
+
+int main(){
+ c1800d8:	e1a0c00d 	mov	ip, sp
+ c1800dc:	e92dd800 	push	{fp, ip, lr, pc}
+ c1800e0:	e24cb004 	sub	fp, ip, #4
+ c1800e4:	e24dd008 	sub	sp, sp, #8
+	unsigned int time = 0;
+ c1800e8:	e3a03000 	mov	r3, #0
+ c1800ec:	e50b3010 	str	r3, [fp, #-16]
+    timer_init();
+ c1800f0:	eb00004e 	bl	c180230 <timer_init>
+    initRGB(N,M);
+ c1800f4:	e3a00c02 	mov	r0, #512	; 0x200
+ c1800f8:	e3a01c02 	mov	r1, #512	; 0x200
+ c1800fc:	ebffffe7 	bl	c1800a0 <initRGB>
+    timer_start();
+ c180100:	eb000055 	bl	c18025c <timer_start>
+    RGB2GrayMatrix(imagenRGB, imagenGris,N,M);
+ c180104:	e59f3058 	ldr	r3, [pc, #88]	; c180164 <main+0x8c>
+ c180108:	e5933000 	ldr	r3, [r3]
+ c18010c:	e1a00003 	mov	r0, r3
+ c180110:	e59f1050 	ldr	r1, [pc, #80]	; c180168 <main+0x90>
+ c180114:	e3a02c02 	mov	r2, #512	; 0x200
+ c180118:	e3a03c02 	mov	r3, #512	; 0x200
+ c18011c:	eb000075 	bl	c1802f8 <RGB2GrayMatrix>
+    apply_gaussian(imagenGris, imagenGauss, N, M);
+ c180120:	e59f0040 	ldr	r0, [pc, #64]	; c180168 <main+0x90>
+ c180124:	e59f1040 	ldr	r1, [pc, #64]	; c18016c <main+0x94>
+ c180128:	e3a02c02 	mov	r2, #512	; 0x200
+ c18012c:	e3a03c02 	mov	r3, #512	; 0x200
+ c180130:	eb000022 	bl	c1801c0 <apply_gaussian>
+    apply_sobel(imagenGauss, imagenSobel, N, M);
+ c180134:	e59f0030 	ldr	r0, [pc, #48]	; c18016c <main+0x94>
+ c180138:	e59f1030 	ldr	r1, [pc, #48]	; c180170 <main+0x98>
+ c18013c:	e3a02c02 	mov	r2, #512	; 0x200
+ c180140:	e3a03c02 	mov	r3, #512	; 0x200
+ c180144:	eb0000a1 	bl	c1803d0 <apply_sobel>
+    time = timer_stop();
+ c180148:	eb000058 	bl	c1802b0 <timer_stop>
+ c18014c:	e50b0010 	str	r0, [fp, #-16]
+    return 0;
+ c180150:	e3a03000 	mov	r3, #0
+}
+ c180154:	e1a00003 	mov	r0, r3
+ c180158:	e24bd00c 	sub	sp, fp, #12
+ c18015c:	e89d6800 	ldm	sp, {fp, sp, lr}
+ c180160:	e12fff1e 	bx	lr
+ c180164:	0c0c0088 	.word	0x0c0c0088
+ c180168:	0c14008c 	.word	0x0c14008c
+ c18016c:	0c0c008c 	.word	0x0c0c008c
+ c180170:	0c10008c 	.word	0x0c10008c
+
+0c180174 <rgb2gray>:
+				R0, LSL#1 la posicion de G
+				R0, LSL#2 la posicion de B
+		-------------------------------------------------------------------------------
+	*/
+rgb2gray:
+		PUSH {R4, R6, LR} //Como vamos a usar R4 y R5 los pusheamos* para preservar los valores anteriores de esos registros
+ c180174:	e92d4050 	push	{r4, r6, lr}
+		//////////////// Paso 1:
+		MOV R6, #6	  // Luego lo usaremos para los indices
+ c180178:	e3a06006 	mov	r6, #6
+		LDR R1, =COEF1// Vamos a Cargar en R1 el valor de la constante COEF1
+ c18017c:	e59f10a4 	ldr	r1, [pc, #164]	; c180228 <FIN_I+0x8>
+		LDRB R2,[R0]  // Leemos pixel->R y lo cargamos en R2 completando con 0 hasta tamaño palabra
+ c180180:	e5d02000 	ldrb	r2, [r0]
+		MUL R3, R2, R1// Multiplicamos el primer valor por nuestro coeficiente
+ c180184:	e0030192 	mul	r3, r2, r1
+		//////////////// Y hacemos lo mismo con los otros 3 valores
+		LDR R1, =COEF2
+ c180188:	e59f109c 	ldr	r1, [pc, #156]	; c18022c <FIN_I+0xc>
+		LDRB R2, [ R0, R6, LSL #1]
+ c18018c:	e7d02086 	ldrb	r2, [r0, r6, lsl #1]
+		MUL R4, R2, R1
+ c180190:	e0040192 	mul	r4, r2, r1
+		////////////////
+		LDR R1, =COEF2
+ c180194:	e59f1090 	ldr	r1, [pc, #144]	; c18022c <FIN_I+0xc>
+		LDRB R2, [ R0, R6, LSL #2]
+ c180198:	e7d02106 	ldrb	r2, [r0, r6, lsl #2]
+		MUL R5, R2, R1
+ c18019c:	e0050192 	mul	r5, r2, r1
+		/////////////// Vamos a realizar la suma de los 3 elementos
+		ADD R0, R3, R4//
+ c1801a0:	e0830004 	add	r0, r3, r4
+		ADD R0, R0, R5// y a almacenarlo en R0 para poder "devolverlo"
+ c1801a4:	e0800005 	add	r0, r0, r5
+		///////////////
+		BL div16384  // llamamos a la división
+ c1801a8:	eb000001 	bl	c1801b4 <div16384>
+		POP {R4, R6, LR} // desenchufamos los registros
+ c1801ac:	e8bd4050 	pop	{r4, r6, lr}
+		MOV PC, LR
+ c1801b0:	e1a0f00e 	mov	pc, lr
+
+0c1801b4 <div16384>:
+		//////////////
+div16384:
+		MOV R1, R0  // movemos a R1 la multiplicacion entera
+ c1801b4:	e1a01000 	mov	r1, r0
+ 		ASR R0, R1, #14 // DIVISION DE R1 ENTRE 2^14 Y EL RESULTADO A R0
+ c1801b8:	e1a00741 	asr	r0, r1, #14
+ 		MOV PC, LR      //
+ c1801bc:	e1a0f00e 	mov	pc, lr
+
+0c1801c0 <apply_gaussian>:
+ 	----------------------------------------------------------------
+ 	Dentro de está funcion llamaremos a otra y le pasaremos parámetros
+ 	se guardará de forma especial */
+
+apply_gaussian:
+		PUSH {R4-R7, LR}
+ c1801c0:	e92d40f0 	push	{r4, r5, r6, r7, lr}
+		MOV R4, #0 // INIDCE I
+ c1801c4:	e3a04000 	mov	r4, #0
+		MOV R5, #0 // INDICE J (LUEGO LO PONDREMOS A 0 MÁS ABAJO DE NUEVO)
+ c1801c8:	e3a05000 	mov	r5, #0
+
+0c1801cc <FOR_I>:
+FOR_I:  CMP R4, R3 // COMPARAMOS EL VALOR height CON NUESTRO INDICE I
+ c1801cc:	e1540003 	cmp	r4, r3
+		BGE FIN_I
+ c1801d0:	aa000012 	bge	c180220 <FIN_I>
+
+0c1801d4 <FOR_J>:
+FOR_J:  CMP R5, R2 // COMPARAMOS EL VALOR wight CON NUESTRO INDICE I
+ c1801d4:	e1550002 	cmp	r5, r2
+		BGE FIN_J
+ c1801d8:	aa00000d 	bge	c180214 <FIN_J>
+		////////////// PASO 1:
+		MUL R6, R4, R2 // Calculamos el valor de dentro del corchete del array que es:
+ c1801dc:	e0060294 	mul	r6, r4, r2
+		ADD R6, R6, R5 // i*wigh+j
+ c1801e0:	e0866005 	add	r6, r6, r5
+		////////////// PASO 2: IMPORTANTE
+		PUSH {R0-R3}// Guardamos los parametros de entrada, ya que vamos a llamar a otra funcion
+ c1801e4:	e92d000f 	push	{r0, r1, r2, r3}
+		MOV R1,R2   // Para pasarle los parametros nuevos los movemos
+ c1801e8:	e1a01002 	mov	r1, r2
+		MOV R2,R3   //
+ c1801ec:	e1a02003 	mov	r2, r3
+		MOV R3,R4   //
+ c1801f0:	e1a03004 	mov	r3, r4
+        PUSH {R5}   // como le pasamos también R5 que es INDICE J también tenemos que guardarlo
+ c1801f4:	e52d5004 	push	{r5}		; (str r5, [sp, #-4]!)
+        //////////////
+        BL gaussian // invocamos a gaussian(im1, width, height, i, j)
+ c1801f8:	eb0000a4 	bl	c180490 <gaussian>
+		MOV R7, R0  // Nos devuelve algo, llamemoslo ... R0, como luego vamos a recuperar R0-R3 lo metemos en R7
+ c1801fc:	e1a07000 	mov	r7, r0
+		ADD SP, SP, #4 // sumamos 4 al Stack pointer
+ c180200:	e28dd004 	add	sp, sp, #4
+		POP {R0 - R3}  // recuperamos nuestros registros poderosos de R0-R3
+ c180204:	e8bd000f 	pop	{r0, r1, r2, r3}
+		STRB R7, [R1, R6] // ESCRIBIMOS EN MEMORIA TAMAÑO PALABRA
+ c180208:	e7c17006 	strb	r7, [r1, r6]
+		ADD R5, R5, #1  // SUMAMOS 1 AL CONTADOR Y REPETIMOS
+ c18020c:	e2855001 	add	r5, r5, #1
+		B FOR_J
+ c180210:	eaffffef 	b	c1801d4 <FOR_J>
+
+0c180214 <FIN_J>:
+FIN_J:  ADD R4, R4, #1 // sumamos 1 al INDICE I
+ c180214:	e2844001 	add	r4, r4, #1
+		MOV R5, #0   // PONEMOS A 0 EL INDICE J
+ c180218:	e3a05000 	mov	r5, #0
+		B FOR_I
+ c18021c:	eaffffea 	b	c1801cc <FOR_I>
+
+0c180220 <FIN_I>:
+FIN_I:  POP {R4-R7, LR}
+ c180220:	e8bd40f0 	pop	{r4, r5, r6, r7, lr}
+		MOV PC, LR
+ c180224:	e1a0f00e 	mov	pc, lr
+ c180228:	00000d9b 	.word	0x00000d9b
+ c18022c:	00002dc6 	.word	0x00002dc6
+
+0c180230 <timer_init>:
+#define rWTCON		(*(volatile unsigned *)0x1d30000)
+#define rWTDAT		(*(volatile unsigned *)0x1d30004)
+#define rWTCNT		(*(volatile unsigned *)0x1d30008)
+
+void timer_init(void)
+{
+ c180230:	e1a0c00d 	mov	ip, sp
+ c180234:	e92dd800 	push	{fp, ip, lr, pc}
+ c180238:	e24cb004 	sub	fp, ip, #4
+	// freq=MCLK/(P+1)/D => P = MCLK/(freq*D) - 1
+	// freq=2000 (2KHz T=0.5ms) D=128 P= MCLK/(128*2000) - 1
+	// Max count = 65535*0.5ms = 37 segundos (aprox)
+	rWTCON=((MCLK/256000-1)<<8)|(3<<3);
+ c18023c:	e59f3010 	ldr	r3, [pc, #16]	; c180254 <timer_init+0x24>
+ c180240:	e59f2010 	ldr	r2, [pc, #16]	; c180258 <timer_init+0x28>
+ c180244:	e5832000 	str	r2, [r3]
+}
+ c180248:	e24bd00c 	sub	sp, fp, #12
+ c18024c:	e89d6800 	ldm	sp, {fp, sp, lr}
+ c180250:	e12fff1e 	bx	lr
+ c180254:	01d30000 	.word	0x01d30000
+ c180258:	0000f918 	.word	0x0000f918
+
+0c18025c <timer_start>:
+
+void timer_start(void)
+{
+ c18025c:	e1a0c00d 	mov	ip, sp
+ c180260:	e92dd800 	push	{fp, ip, lr, pc}
+ c180264:	e24cb004 	sub	fp, ip, #4
+	rWTDAT=0xffff;
+ c180268:	e59f3030 	ldr	r3, [pc, #48]	; c1802a0 <timer_start+0x44>
+ c18026c:	e59f2030 	ldr	r2, [pc, #48]	; c1802a4 <timer_start+0x48>
+ c180270:	e5832000 	str	r2, [r3]
+	rWTCNT=0xffff;	 
+ c180274:	e59f302c 	ldr	r3, [pc, #44]	; c1802a8 <timer_start+0x4c>
+ c180278:	e59f2024 	ldr	r2, [pc, #36]	; c1802a4 <timer_start+0x48>
+ c18027c:	e5832000 	str	r2, [r3]
+	rWTCON |= (1<<5); 
+ c180280:	e59f3024 	ldr	r3, [pc, #36]	; c1802ac <timer_start+0x50>
+ c180284:	e59f2020 	ldr	r2, [pc, #32]	; c1802ac <timer_start+0x50>
+ c180288:	e5922000 	ldr	r2, [r2]
+ c18028c:	e3822020 	orr	r2, r2, #32
+ c180290:	e5832000 	str	r2, [r3]
+}
+ c180294:	e24bd00c 	sub	sp, fp, #12
+ c180298:	e89d6800 	ldm	sp, {fp, sp, lr}
+ c18029c:	e12fff1e 	bx	lr
+ c1802a0:	01d30004 	.word	0x01d30004
+ c1802a4:	0000ffff 	.word	0x0000ffff
+ c1802a8:	01d30008 	.word	0x01d30008
+ c1802ac:	01d30000 	.word	0x01d30000
+
+0c1802b0 <timer_stop>:
+
+unsigned int timer_stop(void)
+{
+ c1802b0:	e1a0c00d 	mov	ip, sp
+ c1802b4:	e92dd800 	push	{fp, ip, lr, pc}
+ c1802b8:	e24cb004 	sub	fp, ip, #4
+	rWTCON &= ~(1<<5);
+ c1802bc:	e59f302c 	ldr	r3, [pc, #44]	; c1802f0 <timer_stop+0x40>
+ c1802c0:	e59f2028 	ldr	r2, [pc, #40]	; c1802f0 <timer_stop+0x40>
+ c1802c4:	e5922000 	ldr	r2, [r2]
+ c1802c8:	e3c22020 	bic	r2, r2, #32
+ c1802cc:	e5832000 	str	r2, [r3]
+	return (0xffff-rWTCNT);
+ c1802d0:	e59f301c 	ldr	r3, [pc, #28]	; c1802f4 <timer_stop+0x44>
+ c1802d4:	e5933000 	ldr	r3, [r3]
+ c1802d8:	e2633cff 	rsb	r3, r3, #65280	; 0xff00
+ c1802dc:	e28330ff 	add	r3, r3, #255	; 0xff
+}
+ c1802e0:	e1a00003 	mov	r0, r3
+ c1802e4:	e24bd00c 	sub	sp, fp, #12
+ c1802e8:	e89d6800 	ldm	sp, {fp, sp, lr}
+ c1802ec:	e12fff1e 	bx	lr
+ c1802f0:	01d30000 	.word	0x01d30000
+ c1802f4:	01d30008 	.word	0x01d30008
+
+0c1802f8 <RGB2GrayMatrix>:
+unsigned char rgb2gray(pixelRGB* pixel)
+{
+	return 0.2126*pixel->R + 0.7152*pixel->G + 0.0722*pixel->B;
+}
+*/
+void RGB2GrayMatrix(pixelRGB orig[], unsigned char dest[], int nfilas, int ncols) {
+ c1802f8:	e1a0c00d 	mov	ip, sp
+ c1802fc:	e92dd810 	push	{r4, fp, ip, lr, pc}
+ c180300:	e24cb004 	sub	fp, ip, #4
+ c180304:	e24dd01c 	sub	sp, sp, #28
+ c180308:	e50b0020 	str	r0, [fp, #-32]	; 0xffffffe0
+ c18030c:	e50b1024 	str	r1, [fp, #-36]	; 0xffffffdc
+ c180310:	e50b2028 	str	r2, [fp, #-40]	; 0xffffffd8
+ c180314:	e50b302c 	str	r3, [fp, #-44]	; 0xffffffd4
+    int i,j;
+    for (i=0;i<nfilas;i++)
+ c180318:	e3a03000 	mov	r3, #0
+ c18031c:	e50b3018 	str	r3, [fp, #-24]	; 0xffffffe8
+ c180320:	ea000023 	b	c1803b4 <RGB2GrayMatrix+0xbc>
+        for (j=0; j<ncols; j++)
+ c180324:	e3a03000 	mov	r3, #0
+ c180328:	e50b301c 	str	r3, [fp, #-28]	; 0xffffffe4
+ c18032c:	ea000019 	b	c180398 <RGB2GrayMatrix+0xa0>
+            dest[i*ncols+j] =  rgb2gray(&orig[i*ncols+j]);
+ c180330:	e51b3018 	ldr	r3, [fp, #-24]	; 0xffffffe8
+ c180334:	e51b202c 	ldr	r2, [fp, #-44]	; 0xffffffd4
+ c180338:	e0020293 	mul	r2, r3, r2
+ c18033c:	e51b301c 	ldr	r3, [fp, #-28]	; 0xffffffe4
+ c180340:	e0823003 	add	r3, r2, r3
+ c180344:	e51b2024 	ldr	r2, [fp, #-36]	; 0xffffffdc
+ c180348:	e0824003 	add	r4, r2, r3
+ c18034c:	e51b3018 	ldr	r3, [fp, #-24]	; 0xffffffe8
+ c180350:	e51b202c 	ldr	r2, [fp, #-44]	; 0xffffffd4
+ c180354:	e0020293 	mul	r2, r3, r2
+ c180358:	e51b301c 	ldr	r3, [fp, #-28]	; 0xffffffe4
+ c18035c:	e0823003 	add	r3, r2, r3
+ c180360:	e1a02003 	mov	r2, r3
+ c180364:	e1a03002 	mov	r3, r2
+ c180368:	e1a03083 	lsl	r3, r3, #1
+ c18036c:	e0833002 	add	r3, r3, r2
+ c180370:	e51b2020 	ldr	r2, [fp, #-32]	; 0xffffffe0
+ c180374:	e0823003 	add	r3, r2, r3
+ c180378:	e1a00003 	mov	r0, r3
+ c18037c:	ebffff7c 	bl	c180174 <rgb2gray>
+ c180380:	e1a03000 	mov	r3, r0
+ c180384:	e20330ff 	and	r3, r3, #255	; 0xff
+ c180388:	e5c43000 	strb	r3, [r4]
+}
+*/
+void RGB2GrayMatrix(pixelRGB orig[], unsigned char dest[], int nfilas, int ncols) {
+    int i,j;
+    for (i=0;i<nfilas;i++)
+        for (j=0; j<ncols; j++)
+ c18038c:	e51b301c 	ldr	r3, [fp, #-28]	; 0xffffffe4
+ c180390:	e2833001 	add	r3, r3, #1
+ c180394:	e50b301c 	str	r3, [fp, #-28]	; 0xffffffe4
+ c180398:	e51b201c 	ldr	r2, [fp, #-28]	; 0xffffffe4
+ c18039c:	e51b302c 	ldr	r3, [fp, #-44]	; 0xffffffd4
+ c1803a0:	e1520003 	cmp	r2, r3
+ c1803a4:	baffffe1 	blt	c180330 <RGB2GrayMatrix+0x38>
+	return 0.2126*pixel->R + 0.7152*pixel->G + 0.0722*pixel->B;
+}
+*/
+void RGB2GrayMatrix(pixelRGB orig[], unsigned char dest[], int nfilas, int ncols) {
+    int i,j;
+    for (i=0;i<nfilas;i++)
+ c1803a8:	e51b3018 	ldr	r3, [fp, #-24]	; 0xffffffe8
+ c1803ac:	e2833001 	add	r3, r3, #1
+ c1803b0:	e50b3018 	str	r3, [fp, #-24]	; 0xffffffe8
+ c1803b4:	e51b2018 	ldr	r2, [fp, #-24]	; 0xffffffe8
+ c1803b8:	e51b3028 	ldr	r3, [fp, #-40]	; 0xffffffd8
+ c1803bc:	e1520003 	cmp	r2, r3
+ c1803c0:	baffffd7 	blt	c180324 <RGB2GrayMatrix+0x2c>
+        for (j=0; j<ncols; j++)
+            dest[i*ncols+j] =  rgb2gray(&orig[i*ncols+j]);
+
+}
+ c1803c4:	e24bd010 	sub	sp, fp, #16
+ c1803c8:	e89d6810 	ldm	sp, {r4, fp, sp, lr}
+ c1803cc:	e12fff1e 	bx	lr
+
+0c1803d0 <apply_sobel>:
+		}
+	}
+}
+*/
+void apply_sobel(unsigned char im1[], unsigned char im2[], int width, int height)
+{
+ c1803d0:	e1a0c00d 	mov	ip, sp
+ c1803d4:	e92dd810 	push	{r4, fp, ip, lr, pc}
+ c1803d8:	e24cb004 	sub	fp, ip, #4
+ c1803dc:	e24dd024 	sub	sp, sp, #36	; 0x24
+ c1803e0:	e50b0020 	str	r0, [fp, #-32]	; 0xffffffe0
+ c1803e4:	e50b1024 	str	r1, [fp, #-36]	; 0xffffffdc
+ c1803e8:	e50b2028 	str	r2, [fp, #-40]	; 0xffffffd8
+ c1803ec:	e50b302c 	str	r3, [fp, #-44]	; 0xffffffd4
+	int i,j;
+
+	for (i=0;i<height;i++){
+ c1803f0:	e3a03000 	mov	r3, #0
+ c1803f4:	e50b3018 	str	r3, [fp, #-24]	; 0xffffffe8
+ c1803f8:	ea00001d 	b	c180474 <apply_sobel+0xa4>
+		for (j=0; j<width; j++){
+ c1803fc:	e3a03000 	mov	r3, #0
+ c180400:	e50b301c 	str	r3, [fp, #-28]	; 0xffffffe4
+ c180404:	ea000013 	b	c180458 <apply_sobel+0x88>
+			im2[i*width+j] = sobel (im1, width, height, i, j);
+ c180408:	e51b3018 	ldr	r3, [fp, #-24]	; 0xffffffe8
+ c18040c:	e51b2028 	ldr	r2, [fp, #-40]	; 0xffffffd8
+ c180410:	e0020293 	mul	r2, r3, r2
+ c180414:	e51b301c 	ldr	r3, [fp, #-28]	; 0xffffffe4
+ c180418:	e0823003 	add	r3, r2, r3
+ c18041c:	e51b2024 	ldr	r2, [fp, #-36]	; 0xffffffdc
+ c180420:	e0824003 	add	r4, r2, r3
+ c180424:	e51b301c 	ldr	r3, [fp, #-28]	; 0xffffffe4
+ c180428:	e58d3000 	str	r3, [sp]
+ c18042c:	e51b0020 	ldr	r0, [fp, #-32]	; 0xffffffe0
+ c180430:	e51b1028 	ldr	r1, [fp, #-40]	; 0xffffffd8
+ c180434:	e51b202c 	ldr	r2, [fp, #-44]	; 0xffffffd4
+ c180438:	e51b3018 	ldr	r3, [fp, #-24]	; 0xffffffe8
+ c18043c:	eb000040 	bl	c180544 <sobel>
+ c180440:	e1a03000 	mov	r3, r0
+ c180444:	e20330ff 	and	r3, r3, #255	; 0xff
+ c180448:	e5c43000 	strb	r3, [r4]
+void apply_sobel(unsigned char im1[], unsigned char im2[], int width, int height)
+{
+	int i,j;
+
+	for (i=0;i<height;i++){
+		for (j=0; j<width; j++){
+ c18044c:	e51b301c 	ldr	r3, [fp, #-28]	; 0xffffffe4
+ c180450:	e2833001 	add	r3, r3, #1
+ c180454:	e50b301c 	str	r3, [fp, #-28]	; 0xffffffe4
+ c180458:	e51b201c 	ldr	r2, [fp, #-28]	; 0xffffffe4
+ c18045c:	e51b3028 	ldr	r3, [fp, #-40]	; 0xffffffd8
+ c180460:	e1520003 	cmp	r2, r3
+ c180464:	baffffe7 	blt	c180408 <apply_sobel+0x38>
+*/
+void apply_sobel(unsigned char im1[], unsigned char im2[], int width, int height)
+{
+	int i,j;
+
+	for (i=0;i<height;i++){
+ c180468:	e51b3018 	ldr	r3, [fp, #-24]	; 0xffffffe8
+ c18046c:	e2833001 	add	r3, r3, #1
+ c180470:	e50b3018 	str	r3, [fp, #-24]	; 0xffffffe8
+ c180474:	e51b2018 	ldr	r2, [fp, #-24]	; 0xffffffe8
+ c180478:	e51b302c 	ldr	r3, [fp, #-44]	; 0xffffffd4
+ c18047c:	e1520003 	cmp	r2, r3
+ c180480:	baffffdd 	blt	c1803fc <apply_sobel+0x2c>
+		for (j=0; j<width; j++){
+			im2[i*width+j] = sobel (im1, width, height, i, j);
+		}
+	}
+}
+ c180484:	e24bd010 	sub	sp, fp, #16
+ c180488:	e89d6810 	ldm	sp, {r4, fp, sp, lr}
+ c18048c:	e12fff1e 	bx	lr
+
+0c180490 <gaussian>:
+ c180490:	e92d01f0 	push	{r4, r5, r6, r7, r8}
+ c180494:	e3530001 	cmp	r3, #1
+ c180498:	e59dc014 	ldr	ip, [sp, #20]
+ c18049c:	da000022 	ble	c18052c <gaussian+0x9c>
+ c1804a0:	e2422002 	sub	r2, r2, #2
+ c1804a4:	e1530002 	cmp	r3, r2
+ c1804a8:	aa00001f 	bge	c18052c <gaussian+0x9c>
+ c1804ac:	e35c0001 	cmp	ip, #1
+ c1804b0:	da00001d 	ble	c18052c <gaussian+0x9c>
+ c1804b4:	e2412002 	sub	r2, r1, #2
+ c1804b8:	e15c0002 	cmp	ip, r2
+ c1804bc:	aa00001a 	bge	c18052c <gaussian+0x9c>
+ c1804c0:	e2433002 	sub	r3, r3, #2
+ c1804c4:	e02cc391 	mla	ip, r1, r3, ip
+ c1804c8:	e3a07000 	mov	r7, #0
+ c1804cc:	e59f8068 	ldr	r8, [pc, #104]	; c18053c <gaussian+0xac>
+ c1804d0:	e080000c 	add	r0, r0, ip
+ c1804d4:	e1a0c007 	mov	ip, r7
+ c1804d8:	e0872107 	add	r2, r7, r7, lsl #2
+ c1804dc:	e0882102 	add	r2, r8, r2, lsl #2
+ c1804e0:	e2422004 	sub	r2, r2, #4
+ c1804e4:	e2806005 	add	r6, r0, #5
+ c1804e8:	e1a03000 	mov	r3, r0
+ c1804ec:	e5534002 	ldrb	r4, [r3, #-2]
+ c1804f0:	e5b25004 	ldr	r5, [r2, #4]!
+ c1804f4:	e2833001 	add	r3, r3, #1
+ c1804f8:	e1530006 	cmp	r3, r6
+ c1804fc:	e02cc495 	mla	ip, r5, r4, ip
+ c180500:	1afffff9 	bne	c1804ec <gaussian+0x5c>
+ c180504:	e2877001 	add	r7, r7, #1
+ c180508:	e3570005 	cmp	r7, #5
+ c18050c:	e0800001 	add	r0, r0, r1
+ c180510:	1afffff0 	bne	c1804d8 <gaussian+0x48>
+ c180514:	e59f3024 	ldr	r3, [pc, #36]	; c180540 <gaussian+0xb0>
+ c180518:	e083239c 	umull	r2, r3, ip, r3
+ c18051c:	e063c00c 	rsb	ip, r3, ip
+ c180520:	e08330ac 	add	r3, r3, ip, lsr #1
+ c180524:	e1a00423 	lsr	r0, r3, #8
+ c180528:	ea000001 	b	c180534 <gaussian+0xa4>
+ c18052c:	e0200391 	mla	r0, r1, r3, r0
+ c180530:	e7d0000c 	ldrb	r0, [r0, ip]
+ c180534:	e8bd01f0 	pop	{r4, r5, r6, r7, r8}
+ c180538:	e12fff1e 	bx	lr
+ c18053c:	0c0c0000 	.word	0x0c0c0000
+ c180540:	e01e01e1 	.word	0xe01e01e1
+
+0c180544 <sobel>:
+ c180544:	e92d0ff0 	push	{r4, r5, r6, r7, r8, r9, sl, fp}
+ c180548:	e3530000 	cmp	r3, #0
+ c18054c:	e59dc020 	ldr	ip, [sp, #32]
+ c180550:	da000027 	ble	c1805f4 <sobel+0xb0>
+ c180554:	e2422001 	sub	r2, r2, #1
+ c180558:	e1530002 	cmp	r3, r2
+ c18055c:	aa000024 	bge	c1805f4 <sobel+0xb0>
+ c180560:	e35c0000 	cmp	ip, #0
+ c180564:	da000022 	ble	c1805f4 <sobel+0xb0>
+ c180568:	e2412001 	sub	r2, r1, #1
+ c18056c:	e15c0002 	cmp	ip, r2
+ c180570:	aa00001f 	bge	c1805f4 <sobel+0xb0>
+ c180574:	e2433001 	sub	r3, r3, #1
+ c180578:	e02cc391 	mla	ip, r1, r3, ip
+ c18057c:	e3a05000 	mov	r5, #0
+ c180580:	e24cc001 	sub	ip, ip, #1
+ c180584:	e59fb074 	ldr	fp, [pc, #116]	; c180600 <sobel+0xbc>
+ c180588:	e080000c 	add	r0, r0, ip
+ c18058c:	e1a06005 	mov	r6, r5
+ c180590:	e1a07005 	mov	r7, r5
+ c180594:	e0854085 	add	r4, r5, r5, lsl #1
+ c180598:	e08b4104 	add	r4, fp, r4, lsl #2
+ c18059c:	e2444004 	sub	r4, r4, #4
+ c1805a0:	e08b9105 	add	r9, fp, r5, lsl #2
+ c1805a4:	e1a0c000 	mov	ip, r0
+ c1805a8:	e3a03000 	mov	r3, #0
+ c1805ac:	e4dc2001 	ldrb	r2, [ip], #1
+ c1805b0:	e7998003 	ldr	r8, [r9, r3]
+ c1805b4:	e5b4a004 	ldr	sl, [r4, #4]!
+ c1805b8:	e283300c 	add	r3, r3, #12
+ c1805bc:	e3530024 	cmp	r3, #36	; 0x24
+ c1805c0:	e027729a 	mla	r7, sl, r2, r7
+ c1805c4:	e0266298 	mla	r6, r8, r2, r6
+ c1805c8:	1afffff7 	bne	c1805ac <sobel+0x68>
+ c1805cc:	e2855001 	add	r5, r5, #1
+ c1805d0:	e3550003 	cmp	r5, #3
+ c1805d4:	e0800001 	add	r0, r0, r1
+ c1805d8:	1affffed 	bne	c180594 <sobel+0x50>
+ c1805dc:	e3570000 	cmp	r7, #0
+ c1805e0:	b2677000 	rsblt	r7, r7, #0
+ c1805e4:	e3560000 	cmp	r6, #0
+ c1805e8:	b2666000 	rsblt	r6, r6, #0
+ c1805ec:	e0870006 	add	r0, r7, r6
+ c1805f0:	ea000000 	b	c1805f8 <sobel+0xb4>
+ c1805f4:	e3a00000 	mov	r0, #0
+ c1805f8:	e8bd0ff0 	pop	{r4, r5, r6, r7, r8, r9, sl, fp}
+ c1805fc:	e12fff1e 	bx	lr
+ c180600:	0c0c0064 	.word	0x0c0c0064
+
+0c180604 <non_max_sup>:
+ c180604:	e12fff1e 	bx	lr

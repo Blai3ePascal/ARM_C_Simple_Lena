@@ -1,0 +1,110 @@
+   1              	# 1 "../misc.asm"
+   1              	
+   0              	
+   0              	
+   0              	
+   2              		.equ COEF1, 3483
+   3              		.equ COEF2, 11718
+   4              		.equ COEF3, 1183
+   5              	
+   6              	    .text
+   7              		.global rgb2gray
+   8              		.global div16384
+   9              		.global apply_gaussian
+  10              		/*
+  11              			rgb2gray instrucciones.
+  12              			en la función de c tenemos por parametros un dato, el cual se pasa por R0.
+  13              			usaremos R0 con sus respectivos desplazamientos para acceder a los distintas
+  14              			posiciones del dato (R G B).
+  15              			Siendo: R0 la posicion de R
+  16              					R0, LSL#1 la posicion de G
+  17              					R0, LSL#2 la posicion de B
+  18              			-------------------------------------------------------------------------------
+  19              		*/
+  20              	rgb2gray:
+  21 0000 50402DE9 			PUSH {R4, R6, LR} //Como vamos a usar R4 y R5 los pusheamos* para preservar los valores anteriore
+  22              			//////////////// Paso 1:
+  23 0004 0660A0E3 			MOV R6, #6	  // Luego lo usaremos para los indices
+  24 0008 A4109FE5 			LDR R1, =COEF1// Vamos a Cargar en R1 el valor de la constante COEF1
+  25 000c 0020D0E5 			LDRB R2,[R0]  // Leemos pixel->R y lo cargamos en R2 completando con 0 hasta tamaño palabra
+  26 0010 920103E0 			MUL R3, R2, R1// Multiplicamos el primer valor por nuestro coeficiente
+  27              			//////////////// Y hacemos lo mismo con los otros 3 valores
+  28 0014 9C109FE5 			LDR R1, =COEF2
+  29 0018 8620D0E7 			LDRB R2, [ R0, R6, LSL #1]
+  30 001c 920104E0 			MUL R4, R2, R1
+  31              			////////////////
+  32 0020 90109FE5 			LDR R1, =COEF2
+  33 0024 0621D0E7 			LDRB R2, [ R0, R6, LSL #2]
+  34 0028 920105E0 			MUL R5, R2, R1
+  35              			/////////////// Vamos a realizar la suma de los 3 elementos
+  36 002c 040083E0 			ADD R0, R3, R4//
+  37 0030 050080E0 			ADD R0, R0, R5// y a almacenarlo en R0 para poder "devolverlo"
+  38              			///////////////
+  39 0034 FEFFFFEB 			BL div16384  // llamamos a la división
+  40 0038 5040BDE8 			POP {R4, R6, LR} // desenchufamos los registros
+  41 003c 0EF0A0E1 			MOV PC, LR
+  42              			//////////////
+  43              	div16384:
+  44 0040 0010A0E1 			MOV R1, R0  // movemos a R1 la multiplicacion entera
+  45 0044 4107A0E1 	 		ASR R0, R1, #14 // DIVISION DE R1 ENTRE 2^14 Y EL RESULTADO A R0
+  46 0048 0EF0A0E1 	 		MOV PC, LR      //
+  47              	//////////////////////
+  48              	
+  49              	/*  apply_gaussian instrucciones: vamos a tener en R0-R3 parametros
+  50              	 	R0: unsigned char im1[]
+  51              	 	R1: unsigned char im2[]
+  52              	 	R2: int width
+  53              	 	R3: int height
+  54              	 	----------------------------------------------------------------
+  55              	 	Dentro de está funcion llamaremos a otra y le pasaremos parámetros
+  56              	 	se guardará de forma especial */
+  57              	
+  58              	apply_gaussian:
+  59 004c F0402DE9 			PUSH {R4-R7, LR}
+  60 0050 0040A0E3 			MOV R4, #0 // INIDCE I
+  61 0054 0050A0E3 			MOV R5, #0 // INDICE J (LUEGO LO PONDREMOS A 0 MÁS ABAJO DE NUEVO)
+  62 0058 030054E1 	FOR_I:  CMP R4, R3 // COMPARAMOS EL VALOR height CON NUESTRO INDICE I
+  63 005c 120000AA 			BGE FIN_I
+  64 0060 020055E1 	FOR_J:  CMP R5, R2 // COMPARAMOS EL VALOR wight CON NUESTRO INDICE I
+  65 0064 0D0000AA 			BGE FIN_J
+  66              			////////////// PASO 1:
+  67 0068 940206E0 			MUL R6, R4, R2 // Calculamos el valor de dentro del corchete del array que es:
+  68 006c 056086E0 			ADD R6, R6, R5 // i*wigh+j
+  69              			////////////// PASO 2: IMPORTANTE
+  70 0070 0F002DE9 			PUSH {R0-R3}// Guardamos los parametros de entrada, ya que vamos a llamar a otra funcion
+  71 0074 0210A0E1 			MOV R1,R2   // Para pasarle los parametros nuevos los movemos
+  72 0078 0320A0E1 			MOV R2,R3   //
+  73 007c 0430A0E1 			MOV R3,R4   //
+  74 0080 04502DE5 	        PUSH {R5}   // como le pasamos también R5 que es INDICE J también tenemos que guardarlo
+  75              	        //////////////
+  76 0084 FEFFFFEB 	        BL gaussian // invocamos a gaussian(im1, width, height, i, j)
+  77 0088 0070A0E1 			MOV R7, R0  // Nos devuelve algo, llamemoslo ... R0, como luego vamos a recuperar R0-R3 lo metemo
+  78 008c 04D08DE2 			ADD SP, SP, #4 // sumamos 4 al Stack pointer
+  79 0090 0F00BDE8 			POP {R0 - R3}  // recuperamos nuestros registros poderosos de R0-R3
+  80 0094 0670C1E7 			STRB R7, [R1, R6] // ESCRIBIMOS EN MEMORIA TAMAÑO PALABRA
+  81 0098 015085E2 			ADD R5, R5, #1  // SUMAMOS 1 AL CONTADOR Y REPETIMOS
+  82 009c EFFFFFEA 			B FOR_J
+  83 00a0 014084E2 	FIN_J:  ADD R4, R4, #1 // sumamos 1 al INDICE I
+  84 00a4 0050A0E3 			MOV R5, #0   // PONEMOS A 0 EL INDICE J
+  85 00a8 EAFFFFEA 			B FOR_I
+  86 00ac F040BDE8 	FIN_I:  POP {R4-R7, LR}
+  87 00b0 0EF0A0E1 			MOV PC, LR
+  88 00b4 9B0D0000 			.end
+  88      C62D0000 
+DEFINED SYMBOLS
+         ../misc.asm:2      *ABS*:00000d9b COEF1
+         ../misc.asm:3      *ABS*:00002dc6 COEF2
+         ../misc.asm:4      *ABS*:0000049f COEF3
+         ../misc.asm:20     .text:00000000 rgb2gray
+         ../misc.asm:43     .text:00000040 div16384
+         ../misc.asm:58     .text:0000004c apply_gaussian
+         ../misc.asm:21     .text:00000000 $a
+         ../misc.asm:62     .text:00000058 FOR_I
+         ../misc.asm:86     .text:000000ac FIN_I
+         ../misc.asm:64     .text:00000060 FOR_J
+         ../misc.asm:83     .text:000000a0 FIN_J
+         ../misc.asm:88     .text:000000b4 $d
+                   .debug_aranges:0000000c $d
+
+UNDEFINED SYMBOLS
+gaussian

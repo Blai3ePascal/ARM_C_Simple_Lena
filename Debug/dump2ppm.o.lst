@@ -1,0 +1,622 @@
+   1              		.cpu arm7tdmi
+   2              		.fpu softvfp
+   3              		.eabi_attribute 20, 1
+   4              		.eabi_attribute 21, 1
+   5              		.eabi_attribute 23, 3
+   6              		.eabi_attribute 24, 1
+   7              		.eabi_attribute 25, 1
+   8              		.eabi_attribute 26, 1
+   9              		.eabi_attribute 30, 6
+  10              		.eabi_attribute 18, 4
+  11              		.file	"dump2ppm.c"
+  21              	.Ltext0:
+  22              		.file 1 "../dump2ppm.c"
+ 2380              		.align	2
+ 2381              	.LC0:
+ 2382 0000 55736167 		.ascii	"Usage: %s infile outfile width height channels\012\000"
+ 2382      653A2025 
+ 2382      7320696E 
+ 2382      66696C65 
+ 2382      206F7574 
+ 2383              		.text
+ 2384              		.align	2
+ 2385              		.global	print_help
+ 2387              	print_help:
+ 2388              	.LFB0:
+   1:../dump2ppm.c **** #include <stdio.h>
+   2:../dump2ppm.c **** #include <stdlib.h>
+   3:../dump2ppm.c **** #include <errno.h>
+   4:../dump2ppm.c **** #include <string.h>
+   5:../dump2ppm.c **** 
+   6:../dump2ppm.c **** void print_help(int argc, char* argv[])
+   7:../dump2ppm.c **** {
+ 2389              		.loc 1 7 0
+ 2390              		.cfi_startproc
+ 2391              		@ Function supports interworking.
+ 2392              		@ args = 0, pretend = 0, frame = 8
+ 2393              		@ frame_needed = 1, uses_anonymous_args = 0
+ 2394 0000 0DC0A0E1 		mov	ip, sp
+ 2395              	.LCFI0:
+ 2396              		.cfi_def_cfa_register 12
+ 2397 0004 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 2398 0008 04B04CE2 		sub	fp, ip, #4
+ 2399              		.cfi_offset 14, -8
+ 2400              		.cfi_offset 13, -12
+ 2401              		.cfi_offset 11, -16
+ 2402              	.LCFI1:
+ 2403              		.cfi_def_cfa 11, 4
+ 2404 000c 08D04DE2 		sub	sp, sp, #8
+ 2405 0010 10000BE5 		str	r0, [fp, #-16]
+ 2406 0014 14100BE5 		str	r1, [fp, #-20]
+   8:../dump2ppm.c **** 	printf("Usage: %s infile outfile width height channels\n", argv[0]);
+ 2407              		.loc 1 8 0
+ 2408 0018 14301BE5 		ldr	r3, [fp, #-20]
+ 2409 001c 003093E5 		ldr	r3, [r3, #0]
+ 2410 0020 10009FE5 		ldr	r0, .L2
+ 2411 0024 0310A0E1 		mov	r1, r3
+ 2412 0028 FEFFFFEB 		bl	printf
+   9:../dump2ppm.c **** }
+ 2413              		.loc 1 9 0
+ 2414 002c 0CD04BE2 		sub	sp, fp, #12
+ 2415 0030 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 2416 0034 1EFF2FE1 		bx	lr
+ 2417              	.L3:
+ 2418              		.align	2
+ 2419              	.L2:
+ 2420 0038 00000000 		.word	.LC0
+ 2421              		.cfi_endproc
+ 2422              	.LFE0:
+ 2424              		.section	.rodata
+ 2425              		.align	2
+ 2426              	.LC1:
+ 2427 0030 496E7661 		.ascii	"Invalid width: %s\012\000"
+ 2427      6C696420 
+ 2427      77696474 
+ 2427      683A2025 
+ 2427      730A00
+ 2428 0043 00       		.align	2
+ 2429              	.LC2:
+ 2430 0044 496E7661 		.ascii	"Invalid height: %s\012\000"
+ 2430      6C696420 
+ 2430      68656967 
+ 2430      68743A20 
+ 2430      25730A00 
+ 2431              		.align	2
+ 2432              	.LC3:
+ 2433 0058 496E7661 		.ascii	"Invalid channels: %s\012\000"
+ 2433      6C696420 
+ 2433      6368616E 
+ 2433      6E656C73 
+ 2433      3A202573 
+ 2434 006e 0000     		.align	2
+ 2435              	.LC4:
+ 2436 0070 4F6E6C79 		.ascii	"Only 1 or 3 channels supported\012\000"
+ 2436      2031206F 
+ 2436      72203320 
+ 2436      6368616E 
+ 2436      6E656C73 
+ 2437              		.align	2
+ 2438              	.LC5:
+ 2439 0090 726200   		.ascii	"rb\000"
+ 2440 0093 00       		.align	2
+ 2441              	.LC6:
+ 2442 0094 4572726F 		.ascii	"Error opening file %s: %s\012\000"
+ 2442      72206F70 
+ 2442      656E696E 
+ 2442      67206669 
+ 2442      6C652025 
+ 2443 00af 00       		.align	2
+ 2444              	.LC7:
+ 2445 00b0 52656164 		.ascii	"Reading from dump file: %d x %d pixels of %d channl"
+ 2445      696E6720 
+ 2445      66726F6D 
+ 2445      2064756D 
+ 2445      70206669 
+ 2446 00e3 65730A00 		.ascii	"es\012\000"
+ 2447 00e7 00       		.align	2
+ 2448              	.LC8:
+ 2449 00e8 4E6F7420 		.ascii	"Not enough pixels in dumpfile, read %d bytes, expec"
+ 2449      656E6F75 
+ 2449      67682070 
+ 2449      6978656C 
+ 2449      7320696E 
+ 2450 011b 74656420 		.ascii	"ted %d\012\000"
+ 2450      25640A00 
+ 2451 0123 00       		.align	2
+ 2452              	.LC9:
+ 2453 0124 776200   		.ascii	"wb\000"
+ 2454 0127 00       		.align	2
+ 2455              	.LC10:
+ 2456 0128 50350A00 		.ascii	"P5\012\000"
+ 2457              		.align	2
+ 2458              	.LC11:
+ 2459 012c 50360A00 		.ascii	"P6\012\000"
+ 2460              		.align	2
+ 2461              	.LC12:
+ 2462 0130 25642025 		.ascii	"%d %d\012\000"
+ 2462      640A00
+ 2463 0137 00       		.align	2
+ 2464              	.LC13:
+ 2465 0138 3235350A 		.ascii	"255\012\000"
+ 2465      00
+ 2466 013d 000000   		.text
+ 2467              		.align	2
+ 2468              		.global	main
+ 2470              	main:
+ 2471              	.LFB1:
+  10:../dump2ppm.c **** 
+  11:../dump2ppm.c **** int main(int argc, char* argv[])
+  12:../dump2ppm.c **** {
+ 2472              		.loc 1 12 0
+ 2473              		.cfi_startproc
+ 2474              		@ Function supports interworking.
+ 2475              		@ args = 0, pretend = 0, frame = 48
+ 2476              		@ frame_needed = 1, uses_anonymous_args = 0
+ 2477 003c 0DC0A0E1 		mov	ip, sp
+ 2478              	.LCFI2:
+ 2479              		.cfi_def_cfa_register 12
+ 2480 0040 10D82DE9 		stmfd	sp!, {r4, fp, ip, lr, pc}
+ 2481 0044 04B04CE2 		sub	fp, ip, #4
+ 2482              		.cfi_offset 14, -8
+ 2483              		.cfi_offset 13, -12
+ 2484              		.cfi_offset 11, -16
+ 2485              		.cfi_offset 4, -20
+ 2486              	.LCFI3:
+ 2487              		.cfi_def_cfa 11, 4
+ 2488 0048 34D04DE2 		sub	sp, sp, #52
+ 2489 004c 40000BE5 		str	r0, [fp, #-64]
+ 2490 0050 44100BE5 		str	r1, [fp, #-68]
+  13:../dump2ppm.c **** 	char* dumpf;
+  14:../dump2ppm.c **** 	char* outf;
+  15:../dump2ppm.c **** 	int width,height, chan;
+  16:../dump2ppm.c **** 	FILE *ifd, *ofd;
+  17:../dump2ppm.c **** 	unsigned char* img;
+  18:../dump2ppm.c **** 	int npix;
+  19:../dump2ppm.c **** 	int n;
+  20:../dump2ppm.c **** 
+  21:../dump2ppm.c **** 	if (argc < 6) {
+ 2491              		.loc 1 21 0
+ 2492 0054 40301BE5 		ldr	r3, [fp, #-64]
+ 2493 0058 050053E3 		cmp	r3, #5
+ 2494 005c 040000CA 		bgt	.L5
+  22:../dump2ppm.c **** 		print_help(argc,argv);
+ 2495              		.loc 1 22 0
+ 2496 0060 40001BE5 		ldr	r0, [fp, #-64]
+ 2497 0064 44101BE5 		ldr	r1, [fp, #-68]
+ 2498 0068 FEFFFFEB 		bl	print_help
+  23:../dump2ppm.c **** 		return -1;
+ 2499              		.loc 1 23 0
+ 2500 006c 0030E0E3 		mvn	r3, #0
+ 2501 0070 FD0000EA 		b	.L6
+ 2502              	.L5:
+  24:../dump2ppm.c **** 	}
+  25:../dump2ppm.c **** 
+  26:../dump2ppm.c **** 	dumpf  = argv[1];
+ 2503              		.loc 1 26 0
+ 2504 0074 44301BE5 		ldr	r3, [fp, #-68]
+ 2505 0078 043083E2 		add	r3, r3, #4
+ 2506 007c 003093E5 		ldr	r3, [r3, #0]
+ 2507 0080 18300BE5 		str	r3, [fp, #-24]
+  27:../dump2ppm.c **** 	outf   = argv[2];
+ 2508              		.loc 1 27 0
+ 2509 0084 44301BE5 		ldr	r3, [fp, #-68]
+ 2510 0088 083083E2 		add	r3, r3, #8
+ 2511 008c 003093E5 		ldr	r3, [r3, #0]
+ 2512 0090 1C300BE5 		str	r3, [fp, #-28]
+  28:../dump2ppm.c **** 	width  = strtol(argv[3],NULL,10);
+ 2513              		.loc 1 28 0
+ 2514 0094 44301BE5 		ldr	r3, [fp, #-68]
+ 2515 0098 0C3083E2 		add	r3, r3, #12
+ 2516 009c 003093E5 		ldr	r3, [r3, #0]
+ 2517 00a0 0300A0E1 		mov	r0, r3
+ 2518 00a4 0010A0E3 		mov	r1, #0
+ 2519 00a8 0A20A0E3 		mov	r2, #10
+ 2520 00ac FEFFFFEB 		bl	strtol
+ 2521 00b0 20000BE5 		str	r0, [fp, #-32]
+  29:../dump2ppm.c **** 	if ((!width && errno == EINVAL) || (errno == ERANGE)){
+ 2522              		.loc 1 29 0
+ 2523 00b4 20301BE5 		ldr	r3, [fp, #-32]
+ 2524 00b8 000053E3 		cmp	r3, #0
+ 2525 00bc 0400001A 		bne	.L7
+ 2526              		.loc 1 29 0 is_stmt 0 discriminator 1
+ 2527 00c0 FEFFFFEB 		bl	__errno
+ 2528 00c4 0030A0E1 		mov	r3, r0
+ 2529 00c8 003093E5 		ldr	r3, [r3, #0]
+ 2530 00cc 160053E3 		cmp	r3, #22
+ 2531 00d0 0400000A 		beq	.L8
+ 2532              	.L7:
+ 2533              		.loc 1 29 0 discriminator 2
+ 2534 00d4 FEFFFFEB 		bl	__errno
+ 2535 00d8 0030A0E1 		mov	r3, r0
+ 2536 00dc 003093E5 		ldr	r3, [r3, #0]
+ 2537 00e0 220053E3 		cmp	r3, #34
+ 2538 00e4 0B00001A 		bne	.L9
+ 2539              	.L8:
+  30:../dump2ppm.c **** 		fprintf(stderr, "Invalid width: %s\n", argv[3]);
+ 2540              		.loc 1 30 0 is_stmt 1
+ 2541 00e8 8C339FE5 		ldr	r3, .L23
+ 2542 00ec 003093E5 		ldr	r3, [r3, #0]
+ 2543 00f0 0C2093E5 		ldr	r2, [r3, #12]
+ 2544 00f4 44301BE5 		ldr	r3, [fp, #-68]
+ 2545 00f8 0C3083E2 		add	r3, r3, #12
+ 2546 00fc 003093E5 		ldr	r3, [r3, #0]
+ 2547 0100 0200A0E1 		mov	r0, r2
+ 2548 0104 74139FE5 		ldr	r1, .L23+4
+ 2549 0108 0320A0E1 		mov	r2, r3
+ 2550 010c FEFFFFEB 		bl	fprintf
+  31:../dump2ppm.c **** 		return -1;
+ 2551              		.loc 1 31 0
+ 2552 0110 0030E0E3 		mvn	r3, #0
+ 2553 0114 D40000EA 		b	.L6
+ 2554              	.L9:
+  32:../dump2ppm.c **** 	}
+  33:../dump2ppm.c **** 
+  34:../dump2ppm.c **** 	height = strtol(argv[4],NULL,10);
+ 2555              		.loc 1 34 0
+ 2556 0118 44301BE5 		ldr	r3, [fp, #-68]
+ 2557 011c 103083E2 		add	r3, r3, #16
+ 2558 0120 003093E5 		ldr	r3, [r3, #0]
+ 2559 0124 0300A0E1 		mov	r0, r3
+ 2560 0128 0010A0E3 		mov	r1, #0
+ 2561 012c 0A20A0E3 		mov	r2, #10
+ 2562 0130 FEFFFFEB 		bl	strtol
+ 2563 0134 24000BE5 		str	r0, [fp, #-36]
+  35:../dump2ppm.c **** 	if ((!height && errno == EINVAL) || (errno == ERANGE)){
+ 2564              		.loc 1 35 0
+ 2565 0138 24301BE5 		ldr	r3, [fp, #-36]
+ 2566 013c 000053E3 		cmp	r3, #0
+ 2567 0140 0400001A 		bne	.L10
+ 2568              		.loc 1 35 0 is_stmt 0 discriminator 1
+ 2569 0144 FEFFFFEB 		bl	__errno
+ 2570 0148 0030A0E1 		mov	r3, r0
+ 2571 014c 003093E5 		ldr	r3, [r3, #0]
+ 2572 0150 160053E3 		cmp	r3, #22
+ 2573 0154 0400000A 		beq	.L11
+ 2574              	.L10:
+ 2575              		.loc 1 35 0 discriminator 2
+ 2576 0158 FEFFFFEB 		bl	__errno
+ 2577 015c 0030A0E1 		mov	r3, r0
+ 2578 0160 003093E5 		ldr	r3, [r3, #0]
+ 2579 0164 220053E3 		cmp	r3, #34
+ 2580 0168 0B00001A 		bne	.L12
+ 2581              	.L11:
+  36:../dump2ppm.c **** 		fprintf(stderr, "Invalid height: %s\n", argv[3]);
+ 2582              		.loc 1 36 0 is_stmt 1
+ 2583 016c 08339FE5 		ldr	r3, .L23
+ 2584 0170 003093E5 		ldr	r3, [r3, #0]
+ 2585 0174 0C2093E5 		ldr	r2, [r3, #12]
+ 2586 0178 44301BE5 		ldr	r3, [fp, #-68]
+ 2587 017c 0C3083E2 		add	r3, r3, #12
+ 2588 0180 003093E5 		ldr	r3, [r3, #0]
+ 2589 0184 0200A0E1 		mov	r0, r2
+ 2590 0188 F4129FE5 		ldr	r1, .L23+8
+ 2591 018c 0320A0E1 		mov	r2, r3
+ 2592 0190 FEFFFFEB 		bl	fprintf
+  37:../dump2ppm.c **** 		return -1;
+ 2593              		.loc 1 37 0
+ 2594 0194 0030E0E3 		mvn	r3, #0
+ 2595 0198 B30000EA 		b	.L6
+ 2596              	.L12:
+  38:../dump2ppm.c **** 	}
+  39:../dump2ppm.c **** 
+  40:../dump2ppm.c **** 	chan   = strtol(argv[5],NULL,10);
+ 2597              		.loc 1 40 0
+ 2598 019c 44301BE5 		ldr	r3, [fp, #-68]
+ 2599 01a0 143083E2 		add	r3, r3, #20
+ 2600 01a4 003093E5 		ldr	r3, [r3, #0]
+ 2601 01a8 0300A0E1 		mov	r0, r3
+ 2602 01ac 0010A0E3 		mov	r1, #0
+ 2603 01b0 0A20A0E3 		mov	r2, #10
+ 2604 01b4 FEFFFFEB 		bl	strtol
+ 2605 01b8 28000BE5 		str	r0, [fp, #-40]
+  41:../dump2ppm.c **** 	if ((!chan && errno == EINVAL) || (errno == ERANGE)){
+ 2606              		.loc 1 41 0
+ 2607 01bc 28301BE5 		ldr	r3, [fp, #-40]
+ 2608 01c0 000053E3 		cmp	r3, #0
+ 2609 01c4 0400001A 		bne	.L13
+ 2610              		.loc 1 41 0 is_stmt 0 discriminator 1
+ 2611 01c8 FEFFFFEB 		bl	__errno
+ 2612 01cc 0030A0E1 		mov	r3, r0
+ 2613 01d0 003093E5 		ldr	r3, [r3, #0]
+ 2614 01d4 160053E3 		cmp	r3, #22
+ 2615 01d8 0400000A 		beq	.L14
+ 2616              	.L13:
+ 2617              		.loc 1 41 0 discriminator 2
+ 2618 01dc FEFFFFEB 		bl	__errno
+ 2619 01e0 0030A0E1 		mov	r3, r0
+ 2620 01e4 003093E5 		ldr	r3, [r3, #0]
+ 2621 01e8 220053E3 		cmp	r3, #34
+ 2622 01ec 0B00001A 		bne	.L15
+ 2623              	.L14:
+  42:../dump2ppm.c **** 		fprintf(stderr, "Invalid channels: %s\n", argv[3]);
+ 2624              		.loc 1 42 0 is_stmt 1
+ 2625 01f0 84329FE5 		ldr	r3, .L23
+ 2626 01f4 003093E5 		ldr	r3, [r3, #0]
+ 2627 01f8 0C2093E5 		ldr	r2, [r3, #12]
+ 2628 01fc 44301BE5 		ldr	r3, [fp, #-68]
+ 2629 0200 0C3083E2 		add	r3, r3, #12
+ 2630 0204 003093E5 		ldr	r3, [r3, #0]
+ 2631 0208 0200A0E1 		mov	r0, r2
+ 2632 020c 74129FE5 		ldr	r1, .L23+12
+ 2633 0210 0320A0E1 		mov	r2, r3
+ 2634 0214 FEFFFFEB 		bl	fprintf
+  43:../dump2ppm.c **** 		return -1;
+ 2635              		.loc 1 43 0
+ 2636 0218 0030E0E3 		mvn	r3, #0
+ 2637 021c 920000EA 		b	.L6
+ 2638              	.L15:
+  44:../dump2ppm.c **** 	}
+  45:../dump2ppm.c **** 
+  46:../dump2ppm.c **** 	if (chan != 1 && chan != 3){
+ 2639              		.loc 1 46 0
+ 2640 0220 28301BE5 		ldr	r3, [fp, #-40]
+ 2641 0224 010053E3 		cmp	r3, #1
+ 2642 0228 0B00000A 		beq	.L16
+ 2643              		.loc 1 46 0 is_stmt 0 discriminator 1
+ 2644 022c 28301BE5 		ldr	r3, [fp, #-40]
+ 2645 0230 030053E3 		cmp	r3, #3
+ 2646 0234 0800000A 		beq	.L16
+  47:../dump2ppm.c **** 		fprintf(stderr, "Only 1 or 3 channels supported\n");
+ 2647              		.loc 1 47 0 is_stmt 1
+ 2648 0238 3C329FE5 		ldr	r3, .L23
+ 2649 023c 003093E5 		ldr	r3, [r3, #0]
+ 2650 0240 0C3093E5 		ldr	r3, [r3, #12]
+ 2651 0244 40029FE5 		ldr	r0, .L23+16
+ 2652 0248 0110A0E3 		mov	r1, #1
+ 2653 024c 1F20A0E3 		mov	r2, #31
+ 2654 0250 FEFFFFEB 		bl	fwrite
+  48:../dump2ppm.c **** 		return -1;
+ 2655              		.loc 1 48 0
+ 2656 0254 0030E0E3 		mvn	r3, #0
+ 2657 0258 830000EA 		b	.L6
+ 2658              	.L16:
+  49:../dump2ppm.c **** 	}
+  50:../dump2ppm.c **** 
+  51:../dump2ppm.c **** 	npix = width * height;
+ 2659              		.loc 1 51 0
+ 2660 025c 20301BE5 		ldr	r3, [fp, #-32]
+ 2661 0260 24201BE5 		ldr	r2, [fp, #-36]
+ 2662 0264 920303E0 		mul	r3, r2, r3
+ 2663 0268 2C300BE5 		str	r3, [fp, #-44]
+  52:../dump2ppm.c **** 
+  53:../dump2ppm.c **** 	if ((ifd = fopen(dumpf,"rb")) == NULL){
+ 2664              		.loc 1 53 0
+ 2665 026c 18001BE5 		ldr	r0, [fp, #-24]
+ 2666 0270 18129FE5 		ldr	r1, .L23+20
+ 2667 0274 FEFFFFEB 		bl	fopen
+ 2668 0278 30000BE5 		str	r0, [fp, #-48]
+ 2669 027c 30301BE5 		ldr	r3, [fp, #-48]
+ 2670 0280 000053E3 		cmp	r3, #0
+ 2671 0284 0E00001A 		bne	.L17
+  54:../dump2ppm.c **** 		fprintf(stderr, "Error opening file %s: %s\n", dumpf, strerror(errno));
+ 2672              		.loc 1 54 0
+ 2673 0288 EC319FE5 		ldr	r3, .L23
+ 2674 028c 003093E5 		ldr	r3, [r3, #0]
+ 2675 0290 0C4093E5 		ldr	r4, [r3, #12]
+ 2676 0294 FEFFFFEB 		bl	__errno
+ 2677 0298 0030A0E1 		mov	r3, r0
+ 2678 029c 003093E5 		ldr	r3, [r3, #0]
+ 2679 02a0 0300A0E1 		mov	r0, r3
+ 2680 02a4 FEFFFFEB 		bl	strerror
+ 2681 02a8 0030A0E1 		mov	r3, r0
+ 2682 02ac 0400A0E1 		mov	r0, r4
+ 2683 02b0 DC119FE5 		ldr	r1, .L23+24
+ 2684 02b4 18201BE5 		ldr	r2, [fp, #-24]
+ 2685 02b8 FEFFFFEB 		bl	fprintf
+  55:../dump2ppm.c **** 		return -1;
+ 2686              		.loc 1 55 0
+ 2687 02bc 0030E0E3 		mvn	r3, #0
+ 2688 02c0 690000EA 		b	.L6
+ 2689              	.L17:
+  56:../dump2ppm.c **** 	}
+  57:../dump2ppm.c **** 	
+  58:../dump2ppm.c **** 	if ((img = malloc(npix * chan)) == NULL){
+ 2690              		.loc 1 58 0
+ 2691 02c4 2C301BE5 		ldr	r3, [fp, #-44]
+ 2692 02c8 28201BE5 		ldr	r2, [fp, #-40]
+ 2693 02cc 920303E0 		mul	r3, r2, r3
+ 2694 02d0 0300A0E1 		mov	r0, r3
+ 2695 02d4 FEFFFFEB 		bl	malloc
+ 2696 02d8 0030A0E1 		mov	r3, r0
+ 2697 02dc 34300BE5 		str	r3, [fp, #-52]
+ 2698 02e0 34301BE5 		ldr	r3, [fp, #-52]
+ 2699 02e4 000053E3 		cmp	r3, #0
+ 2700 02e8 0300001A 		bne	.L18
+  59:../dump2ppm.c **** 		perror(NULL);
+ 2701              		.loc 1 59 0
+ 2702 02ec 0000A0E3 		mov	r0, #0
+ 2703 02f0 FEFFFFEB 		bl	perror
+  60:../dump2ppm.c **** 		return -1;
+ 2704              		.loc 1 60 0
+ 2705 02f4 0030E0E3 		mvn	r3, #0
+ 2706 02f8 5B0000EA 		b	.L6
+ 2707              	.L18:
+  61:../dump2ppm.c **** 	}
+  62:../dump2ppm.c **** 
+  63:../dump2ppm.c **** 	printf("Reading from dump file: %d x %d pixels of %d channles\n", width, height, chan);
+ 2708              		.loc 1 63 0
+ 2709 02fc 94019FE5 		ldr	r0, .L23+28
+ 2710 0300 20101BE5 		ldr	r1, [fp, #-32]
+ 2711 0304 24201BE5 		ldr	r2, [fp, #-36]
+ 2712 0308 28301BE5 		ldr	r3, [fp, #-40]
+ 2713 030c FEFFFFEB 		bl	printf
+  64:../dump2ppm.c **** 
+  65:../dump2ppm.c **** 	if ((n = (int) fread(img, 1, npix * chan, ifd)) != npix * chan){
+ 2714              		.loc 1 65 0
+ 2715 0310 2C301BE5 		ldr	r3, [fp, #-44]
+ 2716 0314 28201BE5 		ldr	r2, [fp, #-40]
+ 2717 0318 920303E0 		mul	r3, r2, r3
+ 2718 031c 34001BE5 		ldr	r0, [fp, #-52]
+ 2719 0320 0110A0E3 		mov	r1, #1
+ 2720 0324 0320A0E1 		mov	r2, r3
+ 2721 0328 30301BE5 		ldr	r3, [fp, #-48]
+ 2722 032c FEFFFFEB 		bl	fread
+ 2723 0330 0030A0E1 		mov	r3, r0
+ 2724 0334 38300BE5 		str	r3, [fp, #-56]
+ 2725 0338 2C301BE5 		ldr	r3, [fp, #-44]
+ 2726 033c 28201BE5 		ldr	r2, [fp, #-40]
+ 2727 0340 920303E0 		mul	r3, r2, r3
+ 2728 0344 38201BE5 		ldr	r2, [fp, #-56]
+ 2729 0348 030052E1 		cmp	r2, r3
+ 2730 034c 0B00000A 		beq	.L19
+  66:../dump2ppm.c **** 		fprintf(stderr, "Not enough pixels in dumpfile, read %d bytes, expected %d\n", n, npix * chan);
+ 2731              		.loc 1 66 0
+ 2732 0350 24319FE5 		ldr	r3, .L23
+ 2733 0354 003093E5 		ldr	r3, [r3, #0]
+ 2734 0358 0C2093E5 		ldr	r2, [r3, #12]
+ 2735 035c 2C301BE5 		ldr	r3, [fp, #-44]
+ 2736 0360 28101BE5 		ldr	r1, [fp, #-40]
+ 2737 0364 910303E0 		mul	r3, r1, r3
+ 2738 0368 0200A0E1 		mov	r0, r2
+ 2739 036c 28119FE5 		ldr	r1, .L23+32
+ 2740 0370 38201BE5 		ldr	r2, [fp, #-56]
+ 2741 0374 FEFFFFEB 		bl	fprintf
+  67:../dump2ppm.c **** 		return -1;
+ 2742              		.loc 1 67 0
+ 2743 0378 0030E0E3 		mvn	r3, #0
+ 2744 037c 3A0000EA 		b	.L6
+ 2745              	.L19:
+  68:../dump2ppm.c **** 	}
+  69:../dump2ppm.c **** 
+  70:../dump2ppm.c **** 	if ((ofd = fopen(outf,"wb")) == NULL){
+ 2746              		.loc 1 70 0
+ 2747 0380 1C001BE5 		ldr	r0, [fp, #-28]
+ 2748 0384 14119FE5 		ldr	r1, .L23+36
+ 2749 0388 FEFFFFEB 		bl	fopen
+ 2750 038c 3C000BE5 		str	r0, [fp, #-60]
+ 2751 0390 3C301BE5 		ldr	r3, [fp, #-60]
+ 2752 0394 000053E3 		cmp	r3, #0
+ 2753 0398 0E00001A 		bne	.L20
+  71:../dump2ppm.c **** 		fprintf(stderr, "Error opening file %s: %s\n", outf, strerror(errno));
+ 2754              		.loc 1 71 0
+ 2755 039c D8309FE5 		ldr	r3, .L23
+ 2756 03a0 003093E5 		ldr	r3, [r3, #0]
+ 2757 03a4 0C4093E5 		ldr	r4, [r3, #12]
+ 2758 03a8 FEFFFFEB 		bl	__errno
+ 2759 03ac 0030A0E1 		mov	r3, r0
+ 2760 03b0 003093E5 		ldr	r3, [r3, #0]
+ 2761 03b4 0300A0E1 		mov	r0, r3
+ 2762 03b8 FEFFFFEB 		bl	strerror
+ 2763 03bc 0030A0E1 		mov	r3, r0
+ 2764 03c0 0400A0E1 		mov	r0, r4
+ 2765 03c4 C8109FE5 		ldr	r1, .L23+24
+ 2766 03c8 1C201BE5 		ldr	r2, [fp, #-28]
+ 2767 03cc FEFFFFEB 		bl	fprintf
+  72:../dump2ppm.c **** 		return -1;
+ 2768              		.loc 1 72 0
+ 2769 03d0 0030E0E3 		mvn	r3, #0
+ 2770 03d4 240000EA 		b	.L6
+ 2771              	.L20:
+  73:../dump2ppm.c **** 	}
+  74:../dump2ppm.c **** 
+  75:../dump2ppm.c **** 	if (chan == 1)
+ 2772              		.loc 1 75 0
+ 2773 03d8 28301BE5 		ldr	r3, [fp, #-40]
+ 2774 03dc 010053E3 		cmp	r3, #1
+ 2775 03e0 0500001A 		bne	.L21
+  76:../dump2ppm.c **** 		fprintf(ofd, "P5\n"); //magic number
+ 2776              		.loc 1 76 0
+ 2777 03e4 B8009FE5 		ldr	r0, .L23+40
+ 2778 03e8 0110A0E3 		mov	r1, #1
+ 2779 03ec 0320A0E3 		mov	r2, #3
+ 2780 03f0 3C301BE5 		ldr	r3, [fp, #-60]
+ 2781 03f4 FEFFFFEB 		bl	fwrite
+ 2782 03f8 040000EA 		b	.L22
+ 2783              	.L21:
+  77:../dump2ppm.c **** 	else
+  78:../dump2ppm.c **** 		fprintf(ofd, "P6\n"); //magic number
+ 2784              		.loc 1 78 0
+ 2785 03fc A4009FE5 		ldr	r0, .L23+44
+ 2786 0400 0110A0E3 		mov	r1, #1
+ 2787 0404 0320A0E3 		mov	r2, #3
+ 2788 0408 3C301BE5 		ldr	r3, [fp, #-60]
+ 2789 040c FEFFFFEB 		bl	fwrite
+ 2790              	.L22:
+  79:../dump2ppm.c **** 	fprintf(ofd, "%d %d\n", width, height);
+ 2791              		.loc 1 79 0
+ 2792 0410 3C001BE5 		ldr	r0, [fp, #-60]
+ 2793 0414 90109FE5 		ldr	r1, .L23+48
+ 2794 0418 20201BE5 		ldr	r2, [fp, #-32]
+ 2795 041c 24301BE5 		ldr	r3, [fp, #-36]
+ 2796 0420 FEFFFFEB 		bl	fprintf
+  80:../dump2ppm.c **** 	fprintf(ofd, "255\n"); //max value
+ 2797              		.loc 1 80 0
+ 2798 0424 84009FE5 		ldr	r0, .L23+52
+ 2799 0428 0110A0E3 		mov	r1, #1
+ 2800 042c 0420A0E3 		mov	r2, #4
+ 2801 0430 3C301BE5 		ldr	r3, [fp, #-60]
+ 2802 0434 FEFFFFEB 		bl	fwrite
+  81:../dump2ppm.c **** 	fwrite(img, 1, npix * chan, ofd);
+ 2803              		.loc 1 81 0
+ 2804 0438 2C301BE5 		ldr	r3, [fp, #-44]
+ 2805 043c 28201BE5 		ldr	r2, [fp, #-40]
+ 2806 0440 920303E0 		mul	r3, r2, r3
+ 2807 0444 34001BE5 		ldr	r0, [fp, #-52]
+ 2808 0448 0110A0E3 		mov	r1, #1
+ 2809 044c 0320A0E1 		mov	r2, r3
+ 2810 0450 3C301BE5 		ldr	r3, [fp, #-60]
+ 2811 0454 FEFFFFEB 		bl	fwrite
+  82:../dump2ppm.c **** 	fclose(ofd);
+ 2812              		.loc 1 82 0
+ 2813 0458 3C001BE5 		ldr	r0, [fp, #-60]
+ 2814 045c FEFFFFEB 		bl	fclose
+  83:../dump2ppm.c **** 	free(img);
+ 2815              		.loc 1 83 0
+ 2816 0460 34001BE5 		ldr	r0, [fp, #-52]
+ 2817 0464 FEFFFFEB 		bl	free
+  84:../dump2ppm.c **** 
+  85:../dump2ppm.c **** 	return 0;
+ 2818              		.loc 1 85 0
+ 2819 0468 0030A0E3 		mov	r3, #0
+ 2820              	.L6:
+  86:../dump2ppm.c **** }
+ 2821              		.loc 1 86 0
+ 2822 046c 0300A0E1 		mov	r0, r3
+ 2823 0470 10D04BE2 		sub	sp, fp, #16
+ 2824 0474 10689DE8 		ldmfd	sp, {r4, fp, sp, lr}
+ 2825 0478 1EFF2FE1 		bx	lr
+ 2826              	.L24:
+ 2827              		.align	2
+ 2828              	.L23:
+ 2829 047c 00000000 		.word	_impure_ptr
+ 2830 0480 30000000 		.word	.LC1
+ 2831 0484 44000000 		.word	.LC2
+ 2832 0488 58000000 		.word	.LC3
+ 2833 048c 70000000 		.word	.LC4
+ 2834 0490 90000000 		.word	.LC5
+ 2835 0494 94000000 		.word	.LC6
+ 2836 0498 B0000000 		.word	.LC7
+ 2837 049c E8000000 		.word	.LC8
+ 2838 04a0 24010000 		.word	.LC9
+ 2839 04a4 28010000 		.word	.LC10
+ 2840 04a8 2C010000 		.word	.LC11
+ 2841 04ac 30010000 		.word	.LC12
+ 2842 04b0 38010000 		.word	.LC13
+ 2843              		.cfi_endproc
+ 2844              	.LFE1:
+ 2846              	.Letext0:
+DEFINED SYMBOLS
+                            *ABS*:00000000 dump2ppm.c
+C:\Users\pacio\AppData\Local\Temp\ccQ3jt9e.s:2380   .rodata:00000000 $d
+C:\Users\pacio\AppData\Local\Temp\ccQ3jt9e.s:2384   .text:00000000 $a
+C:\Users\pacio\AppData\Local\Temp\ccQ3jt9e.s:2387   .text:00000000 print_help
+C:\Users\pacio\AppData\Local\Temp\ccQ3jt9e.s:2420   .text:00000038 $d
+C:\Users\pacio\AppData\Local\Temp\ccQ3jt9e.s:2467   .text:0000003c $a
+C:\Users\pacio\AppData\Local\Temp\ccQ3jt9e.s:2470   .text:0000003c main
+C:\Users\pacio\AppData\Local\Temp\ccQ3jt9e.s:2829   .text:0000047c $d
+                     .debug_frame:00000010 $d
+
+UNDEFINED SYMBOLS
+printf
+strtol
+__errno
+fprintf
+fwrite
+fopen
+strerror
+malloc
+perror
+fread
+fclose
+free
+_impure_ptr
